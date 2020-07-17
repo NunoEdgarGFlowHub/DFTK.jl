@@ -24,6 +24,7 @@ struct Model{T <: Real}
     #     :spinless   No spin at all ("spinless fermions", "mathematicians' electrons").
     #                 The difference with :none is that the occupations are 1 instead of 2
     spin_polarization::Symbol
+    nspinat::Vector{T}
 
     # If temperature=0, no fractional occupations are used.
     # If temperature is nonzero, the occupations are
@@ -72,6 +73,7 @@ function Model(lattice::AbstractMatrix{T};
                temperature=T(0.0),
                smearing=nothing,
                spin_polarization=:none,
+	       nspinat=[],
                symmetry=:auto
                ) where {T <: Real}
 
@@ -132,7 +134,7 @@ function Model(lattice::AbstractMatrix{T};
     end
 
     Model{T}(lattice, recip_lattice, unit_cell_volume, recip_cell_volume, d, n_electrons,
-             spin_polarization, T(temperature), smearing, atoms, terms, symops)
+             spin_polarization, nspinat, T(temperature), smearing, atoms, terms, symops)
 end
 
 """

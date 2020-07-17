@@ -94,6 +94,7 @@ Solve the Kohn-Sham equations with a SCF algorithm, starting at ρ.
 @timing function self_consistent_field(basis::PlaneWaveBasis;
                                        n_bands=default_n_bands(basis.model),
                                        ρ=guess_density(basis),
+                                       ρs=guess_spin_density(basis),
                                        ψ=nothing,
                                        tol=1e-6,
                                        maxiter=100,
@@ -120,8 +121,7 @@ Solve the Kohn-Sham equations with a SCF algorithm, starting at ρ.
     eigenvalues = nothing
     n_spin=number_of_spins(basis.model)
     ρout = ρ
-    ρsout = ρ
-    #ρsout = zeros(size(ρ))
+    ρsout = ρs
     εF = nothing
     n_iter = 0
     energies = nothing
@@ -133,9 +133,9 @@ Solve the Kohn-Sham equations with a SCF algorithm, starting at ρ.
     function fixpoint_map(x)
         n_iter += 1
 	if n_spin == 2
+        # x has 2 blocks: total and spin density
                 (ρin,ρsin)=(from_real(basis,x[:,:,:,1]),from_real(basis,x[:,:,:,2]))
         else
-        # x has 2 blocks: total and spin density
             (ρin,ρsin)=(from_real(basis, x),nothing)
         end
 
